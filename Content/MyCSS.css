@@ -1,0 +1,24 @@
+﻿.text-purple {
+    color: #28FF28;
+}
+
+.color-purple {
+    background-color: #6F00D2;
+}
+
+.alert-eva {
+    color: #28FF28;
+    background-color: #6F00D2;
+    border-color: #c3e6cb;
+}
+
+#btns {
+    position: fixed;
+    z-index: 1;
+    right: 5%;
+    top: 2%;
+}
+
+body {
+    overflow-x: hidden;  
+}

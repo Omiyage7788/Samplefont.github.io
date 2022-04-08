@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/MyCSS.css" rel="stylesheet" />
+    <style>
+        body {
+            background-image: url('Photos/background.jpg');
+            background-repeat: no-repeat;
+            background-size: auto;
+            background-attachment: fixed;
+            /*background-position: center*/
+        }
+
+    </style>
+
+</head>
+<body>
+        
+        
+        <div class="jumbotron jumbotron-fluid alert alert-eva">
+            <div class="text-center">
+                <h1 class="display-4">全國休閒農業區旅遊資訊</h1>
+                <p class="lead">找尋您想要的休閒農業區!!</p>
+            </div>
+        </div>
+        
+    
+
+    <div class="container">
+
+
+        <div class="row" id="main"></div>
+
+        <div id="detail"></div>
+    </div>
+
+
+
+
+    <script src="Scripts/jquery-3.0.0.min.js"></script>
+
+    <script src="Scripts/bootstrap.bundle.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script>
+        var m = "";
+        var d = "";
+        var url = "https://data.coa.gov.tw/Service/OpenData/ODwsv/ODwsvAttractions.aspx";
+        $.ajax({
+            type: 'get',
+            url: url,
+            success: function (data) {
+
+                for (var i = 0; i < data.length; i++) {
+                    let Introduction = data[i].Introduction == "" ? "尚無內容" : data[i].Introduction.substring(0, 30);
+                    m += `<div class="mt-3 col-lg-3">
+                                                <div class="card border-info">
+                                                    <img src=${data[i].Photo} class="card-img-top mt-2" style="height:160px">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title font-weight-bold" style="height:50px">${data[i].Name}</h5>
+                                                        <div class="font-weight-bold">${data[i].City}</div>
+                                                        <p style="height:72px">${Introduction}...</p>
+                                                        <button class="btn btn-danger btn-block" title="${i}">查看更多</button>
+                                                    </div>
+                                                </div>
+                                              </div>`
+                }
+                $('#main').append(m);
+            },
+            error: function () {
+                alert("錯誤!!")
+            }
+        });
+
+        $('#main').click(function (evt) {
+            $('#detail').empty();
+
+            if (evt.target.tagName == "BUTTON") {
+                var i = evt.target.title;
+                $.ajax({
+                    type: 'get',
+                    url: url,
+                    success: function (data) {
+                        d = `
+                                                <div class="card border-info">
+                                                    <div class="card-header text-center">
+                                                        <h1 class="card-title font-weight-bold" ">${data[i].Name}</h1>
+                                                        <img src=${data[i].Photo} class="card-img-top mt-2">
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <h3 class="font-weight-bold text-right">${data[i].City} ${data[i].Town}</h3>
+                                                        <div>${data[i].Introduction}</div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <h4 class="font-weight-bold">電話:${data[i].Tel}</h4>
+                                                        <h4 class="font-weight-bold">地址:${data[i].Address}</h4>
+                                                        <h4><a href="http://maps.google.com/?q='+ ${data[i].Name}' " target="_blank">查看地圖</a> </h4>
+                                                        <p class="text-right"><button class="btn btn-danger"}">返回首頁</button></p>
+                                                    </div>
+                                                </div>`
+
+                        $('#detail').append(d).fadeIn(800);
+                        $('#main').fadeOut(700);
+                    },
+                    error: function () {
+                        alert("錯誤!!")
+                    }
+                });
+            }
+        });
+
+        $('#detail').click(function (evt) {
+            if (evt.target.tagName == "BUTTON") {
+                $('#detail').fadeOut(500);
+                $('#main').fadeIn(600);
+            }
+        });
+
+    </script>
+</body>
+</html>
